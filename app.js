@@ -36,11 +36,12 @@ wins.configure({
 
 const koa = require('koa');
 const logger = require('koa-logger');
-const mount = require('koa-mount');
 const path = require('path');
+const cors = require('@koa/cors');
 
 
 const app = new koa();
+app.use(cors());
 app.use(logger());
 
 
@@ -48,8 +49,13 @@ app.use(logger());
 let baseRoutes = require('./routes/index');
 app.use(baseRoutes.routes());
 
+// >>> /api/auth...
+let authRoutes = require('./routes/api/auth');
+app.use(authRoutes.routes());
+
+// >>> /api... (with catchall)
 let apiRoutes = require('./routes/api');
-app.use(mount('/api', apiRoutes.routes()));
+app.use(apiRoutes.routes());
 
 
 // Frontend redirect

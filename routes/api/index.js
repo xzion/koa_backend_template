@@ -1,5 +1,12 @@
-const router = require('koa-router')();
+const router = require('koa-router')({
+    prefix: '/api'
+});
 const wins = require('winston');
+
+const mw = require('./middleware');
+
+router.use(mw.handleCustomErrors);
+router.use(mw.verifyJWT);
 
 router.get('/', async (ctx) => {
     ctx.body = "Hello World - GET /";
@@ -17,4 +24,12 @@ router.all('/*', async (ctx) => {
     ctx.body = `BAD API CALL: ${ctx.request.method} - ${ctx.request.originalUrl}`;
     ctx.response.status = 404;
 });
+
+
+
+
+
+
+
+
 module.exports = router;
