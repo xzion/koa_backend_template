@@ -38,11 +38,27 @@ const koa = require('koa');
 const logger = require('koa-logger');
 const path = require('path');
 const cors = require('@koa/cors');
-
+const bp = require('koa-bodyparser');
 
 const app = new koa();
-app.use(cors());
 app.use(logger());
+app.use(bp());
+app.use(cors());
+
+
+// Enforce HTTPS on heroku
+let enforceHTTPS = async (ctx, next) => {
+    if (ctx.get('x-forwarded-proto') != 'https') {
+        wins.debug(`Got a http request, redirecting to https://${ctx.host}${ctx.path}`);
+        ctx.status = 301;
+        ctx.redirect(`https://${ctx.host}${ctx.path}`);
+    } else {
+        await next();
+    }
+};
+if (process.env.NODE_ENV == 'production') {
+    app.use(enforceHTTPS);
+}
 
 
 // Create the routes
