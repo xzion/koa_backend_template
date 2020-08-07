@@ -74,24 +74,6 @@ let apiRoutes = require('./routes/api');
 app.use(apiRoutes.routes());
 
 
-// Frontend redirect
-const router = require('koa-router')();
-if (process.env.NODE_ENV !== 'production') {
-    app.use(require('koa-static')(path.join(__dirname, '..', 'frontend', 'dist')));
-    const send = require('koa-send');
-    router.get('/*', async function (ctx) {
-        // Send the index for every GET request
-        await send(ctx, 'index.html', {root: path.join(__dirname, '..', 'frontend', 'dist')});
-    });
-} else {
-    // Production
-    router.get('/*', async (ctx) => {
-        wins.debug(`Got a random route: ${ctx.request.originalUrl}`) ;
-        ctx.throw(404, `404 - Route Not Found: ${ctx.request.originalUrl}`);
-    });
-}
-app.use(router.routes());
-
 
 // Start the server
 const PORT = process.env.PORT || 3000;
