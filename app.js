@@ -71,7 +71,7 @@ if (process.env.NODE_ENV !== 'production') {
     // Production
     router.get('/*', async (ctx) => {
         wins.debug(`Got a random route: ${ctx.request.originalUrl}`) ;
-        ctx.body = `Frontend redirect: ${ctx.request.originalUrl}`;
+        ctx.throw(404, `404 - Route Not Found: ${ctx.request.originalUrl}`);
     });
 }
 app.use(router.routes());
