@@ -19,7 +19,7 @@ router.get('/test', async (ctx) => {
 });
 
 // This always goes last
-router.all('/*', async (ctx) => {
+router.all('/(.*)', async (ctx) => {
     wins.error(`BAD API CALL: ${ctx.request.method} - ${ctx.request.originalUrl}`);
     ctx.body = `BAD API CALL: ${ctx.request.method} - ${ctx.request.originalUrl}`;
     ctx.response.status = 404;
